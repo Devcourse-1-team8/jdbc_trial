@@ -84,7 +84,6 @@ public class LikeRepositoryImpl implements LikeRepository {
     @Override
     public boolean checkExist(LikeDTO like) {
         int rowCount = 0;
-        boolean flag = false;
 
         try {
             con = DBUtil.getConnection();
@@ -100,9 +99,9 @@ public class LikeRepositoryImpl implements LikeRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-//        finally {
-//            DBUtil.close(rs, pstmt, con);
-//        }
+        finally {
+            DBUtil.close(rs, pstmt, con);
+        }
 
         return rowCount > 0 ? true : false;
     }
