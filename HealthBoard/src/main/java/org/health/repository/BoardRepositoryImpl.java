@@ -44,12 +44,12 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public int changeVisible(BoardDTO board) {
+    public int changeVisible(int userId) {
         int result = 0;
 
         try {
             String sql = "update board set visible = false where board_id = "
-                    + board.getBoard_id();
+                    + userId;
             con = DBUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             result = pstmt.executeUpdate();
@@ -59,11 +59,6 @@ public class BoardRepositoryImpl implements BoardRepository {
             DBUtil.close(pstmt, con);
         }
         return result;
-    }
-
-    @Override
-    public List<BoardDTO> findByUser_id(int user_id) {
-        return null;
     }
 
     @Override
