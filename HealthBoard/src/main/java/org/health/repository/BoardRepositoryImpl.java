@@ -68,7 +68,6 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public List<BoardDTO> findAll() {
-        BoardDTO boardDTO = new BoardDTO();
         List<BoardDTO> list = new ArrayList<>();
 
         try {
@@ -79,6 +78,8 @@ public class BoardRepositoryImpl implements BoardRepository {
             rs = pstmt.executeQuery();
 
             while(rs.next()){
+                BoardDTO boardDTO = new BoardDTO();
+
                 boardDTO.setBoard_id(rs.getInt("b.board_id")); //int
                 boardDTO.setUser_id(rs.getInt("b.user_id"));  //int
                 boardDTO.setNickname(rs.getString("u.nickname"));
@@ -88,6 +89,7 @@ public class BoardRepositoryImpl implements BoardRepository {
                 Date sqlDate = rs.getDate("b.create_at");
                 boardDTO.setCreate_at(sqlDate.toLocalDate());
                 boardDTO.setVisible(rs.getBoolean("b.visible"));  //boolean
+
                 list.add(boardDTO);
             }
         }catch (SQLException e){
