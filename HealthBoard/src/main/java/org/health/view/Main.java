@@ -134,8 +134,7 @@ public class Main {
     private static void viewPersonalBoardRecords(BufferedReader reader) throws IOException {
         System.out.print("닉네임을 입력하세요: ");
         String nickname = reader.readLine();
-        //  << 사용자 ID 조회 로직 넣기
-        int userId = 1;
+        int userId = AuthManager.getInstance().getCurrentUser();
         boardRepository.findByUser_id(userId).forEach(System.out::println); // toString으로 출력
     }
 
@@ -155,9 +154,11 @@ public class Main {
         int exerciseTime = Integer.parseInt(reader.readLine());
         System.out.print("기록 내용을 입력하세요: ");
         String content = reader.readLine();
+        System.out.println("닉네임을 입력하세요");
+        String nickname = reader.readLine();
 
         int userId = AuthManager.getInstance().getCurrentUser();
-        BoardDTO board = new BoardDTO(0, userId, "별명",exerciseType, exerciseTime, content, null, true);
+        BoardDTO board = new BoardDTO(0, userId, nickname ,exerciseType, exerciseTime, content, null, true);
         boardRepository.addBoard(board);
     }
 
