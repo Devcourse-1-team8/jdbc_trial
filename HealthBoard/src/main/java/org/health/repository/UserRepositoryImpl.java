@@ -80,39 +80,38 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<UserDTO> findAll() throws SQLException {
+    public List<UserDTO> findAll() {
         List<UserDTO> users = new ArrayList<>();
-        DBUtil dbUtil = new DBUtil();
         Role myRole;
-        con = dbUtil.getConnection();
-        String SQL = "select * from user";
-        pstmt = con.prepareStatement(SQL);
-        rs = pstmt.executeQuery();
 
-        while (rs.next()) {
-            int user_id = rs.getInt(1);
-            String nickname = rs.getString(2);
-            int age = rs.getInt(3);
-            String gender = rs.getString(4);
-            LocalDate last_login_date = rs.getDate(5).toLocalDate();
-            int login_count = rs.getInt(6);
-            String role = rs.getString(7);
+        try {
+            con = DBUtil.getConnection();
+            String sql = "select * from user";
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
 
-            UserDTO user = new UserDTO();
-            user.setUser_id(user_id);
-            user.setNickname(nickname);
-            user.setAge(age);
-            user.setGender(gender);
-            user.setLast_login_date(last_login_date);
-            user.setLogin_count(login_count);
-            if (role.equals("user")) {
-                myRole = Role.USER;
+            while (rs.next()) {
+                UserDTO user = new UserDTO();
+
+                user.setUser_id(user_id);
+                user.setNickname(nickname);
+                user.setAge(age);
+                user.setGender(gender);
+                user.setLast_login_date(last_login_date);
+                user.setLogin_count(login_count);
+                if (role.equals("user")) {
+                    myRole = Role.USER;
+                }
+                else {
+                    myRole = Role.MANAGER;
+                }
+                user.setRole(myRole);
+                users.add(user);
             }
-            else {
-                myRole = Role.MANAGER;
-            }
-            user.setRole(myRole);
-            users.add(user);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBUtil.close(rs, pstmt, con);
         }
         return users;
     }
