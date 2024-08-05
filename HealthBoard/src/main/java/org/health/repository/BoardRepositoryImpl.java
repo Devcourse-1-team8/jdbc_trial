@@ -21,7 +21,7 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public int addBoard(BoardDTO board) {
+    public int addBoard(BoardDTO board, int userId) {
         return 0;
     }
 
