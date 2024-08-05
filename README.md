@@ -189,3 +189,9 @@ values (3, 1),
 | docs | README와 같은 문서 수정 |
 | merge | merge |
 | rename | 파일, 폴더명 수정 혹은 이동 |
+
+# 실행 화면
+![결과 화면1](./result1.png)
+![결과 화면2](./result2.png)
+![결과 화면3](./result3.png)
+![결과 화면4](./result4.png)
