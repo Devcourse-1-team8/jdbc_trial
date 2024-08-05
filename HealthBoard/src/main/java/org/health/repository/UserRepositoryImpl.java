@@ -26,9 +26,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public int login(UserDTO user) {
+    public int login(String user) {
         return 0;
     }
+
+    @Override
+    public void logout() {}
 
     @Override
     public List<UserDTO> findAll() {

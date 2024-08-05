@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface UserRepository {
     int addUser(UserDTO user);
-    int login(UserDTO user);
+    int login(String user);
+    void logout();
     List<UserDTO> findAll();
 }
