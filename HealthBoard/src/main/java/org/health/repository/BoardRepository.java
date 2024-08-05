@@ -8,7 +8,7 @@ import java.util.List;
 public interface BoardRepository {
 
     int addBoard(BoardDTO board);
-    int changeVisible(BoardDTO board);
+    int changeVisible(int boardId);
     List<BoardDTO> findByUser_id(int user_id);
     List<BoardDTO> findAll();
     BoardLikeDTO findById(int board_id, int user_id);
