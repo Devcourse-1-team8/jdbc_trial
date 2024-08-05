@@ -67,12 +67,8 @@ public class UserRepositoryImpl implements UserRepository {
                 myRole = Role.manager;
             }
             user.setRole(myRole);
-            System.out.println(user);
             users.add(user);
         }
-
-        // 추후 삭제하기
-        System.out.println("UserRepositoryImpl.find all");
         return users;
     }
 }
