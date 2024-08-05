@@ -45,12 +45,12 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public int changeVisible(BoardDTO board) {
+    public int changeVisible(int boardId) {
         int result = 0;
 
         try {
             String sql = "update board set visible = false where board_id = "
-                    + board.getBoard_id();
+                    + boardId;
             con = DBUtil.getConnection();
             pstmt = con.prepareStatement(sql);
             result = pstmt.executeUpdate();
