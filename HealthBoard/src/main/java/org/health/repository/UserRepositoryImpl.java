@@ -2,9 +2,15 @@ package org.health.repository;
 
 import org.health.domain.UserDTO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository{
+    private Connection con;
+    private ResultSet rs;
+    private PreparedStatement pstmt;
     @Override
     public int addUser(UserDTO user) {
         return 0;

@@ -2,9 +2,15 @@ package org.health.repository;
 
 import org.health.domain.BoardDTO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 public class BoardRepositoryImpl implements BoardRepository{
+    private Connection con;
+    private ResultSet rs;
+    private PreparedStatement pstmt;
     @Override
     public int addBoard(BoardDTO board) {
         return 0;
