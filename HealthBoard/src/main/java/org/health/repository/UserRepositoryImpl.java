@@ -81,10 +81,10 @@ public class UserRepositoryImpl implements UserRepository {
             user.setLast_login_date(last_login_date);
             user.setLogin_count(login_count);
             if (role.equals("user")) {
-                myRole = Role.user;
+                myRole = Role.USER;
             }
             else {
-                myRole = Role.manager;
+                myRole = Role.MANAGER;
             }
             user.setRole(myRole);
             users.add(user);
