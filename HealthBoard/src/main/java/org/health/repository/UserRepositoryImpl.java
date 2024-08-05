@@ -10,9 +10,19 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
+
+    private static UserRepositoryImpl instance = new UserRepositoryImpl();
+
     private Connection con;
     private ResultSet rs;
     private PreparedStatement pstmt;
+
+
+    private UserRepositoryImpl() {}
+
+    public static UserRepositoryImpl getInstance() {
+        return instance;
+    }
 
     @Override
     public int addUser(UserDTO user) {
@@ -20,9 +30,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public int login(UserDTO user) {
+    public int login(String user) {
         return 0;
     }
+
+    @Override
+    public void logout() {}
 
     @Override
     public List<UserDTO> findAll() {

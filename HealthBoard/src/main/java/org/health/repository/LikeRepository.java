@@ -8,4 +8,5 @@ public interface LikeRepository {
     int addLike(LikeDTO like);
     int deleteLike(LikeDTO like);
 
+  
 }
