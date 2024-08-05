@@ -1,6 +1,7 @@
 package org.health.repository;
 
 import org.health.domain.BoardDTO;
+import org.health.domain.BoardLikeDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -99,7 +100,56 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public BoardDTO findById(int id) {
-        return null;
+    public BoardLikeDTO findById(int board_id, int user_id) {
+        try {
+            con = DBUtil.getConnection();
+            pstmt = con.prepareStatement("select board_id, user.user_id, nickname, exercise_type, exercise_time, memo, create_at, visible " +
+                    "from board " +
+                    "join user on board.user_id = user.user_id " +
+                    "where board_id = ?");
+            pstmt.setInt(1, board_id);
+            ResultSet boardInfoResultSet = pstmt.executeQuery();
+
+            pstmt = con.prepareStatement("select count(*) as like_count " +
+                    "from like_tb " +
+                    "where board_id = ?");
+            pstmt.setInt(1, board_id);
+            ResultSet likeCountResultSet = pstmt.executeQuery();
+
+            pstmt = con.prepareStatement("select if( " +
+                    "(select count(*) from like_tb where user_id = ? and board_id = ?) = 0, " +
+                    "false, " +
+                    "true " +
+                    ") as like_status");
+            pstmt.setInt(1, user_id);
+            pstmt.setInt(2, board_id);
+            ResultSet likeStatusResultSet = pstmt.executeQuery();
+
+            return toBoardLikeDTO(boardInfoResultSet, likeCountResultSet, likeStatusResultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
     }
+
+    private BoardLikeDTO toBoardLikeDTO(ResultSet boardInfoResultSet, ResultSet likeCountResultSet, ResultSet likestatusResultSet) throws SQLException {
+        boardInfoResultSet.next();
+        likeCountResultSet.next();
+        likestatusResultSet.next();
+        BoardLikeDTO dto = new BoardLikeDTO();
+        dto.setUser_id(boardInfoResultSet.getInt("user_id"));
+        dto.setNickname(boardInfoResultSet.getString("nickname"));
+
+        dto.setBoard_id(boardInfoResultSet.getInt("board_id"));
+        dto.setExercise_type(boardInfoResultSet.getString("exercise_type"));
+        dto.setExercise_time(boardInfoResultSet.getInt("exercise_time"));
+        dto.setMemo(boardInfoResultSet.getString("memo"));
+        dto.setCreate_at(boardInfoResultSet.getDate("create_at").toLocalDate());
+        dto.setVisible(boardInfoResultSet.getBoolean("visible"));
+
+        dto.setLike_count(likeCountResultSet.getInt("like_count"));
+        dto.setLike_status(likestatusResultSet.getBoolean("like_status"));
+        return dto;
+    }
+
 }
