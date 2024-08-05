@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBUtil {
-    public static final String url = "jdbc:mariadb://svc.sel5.cloudtype.app:30739/workshop";
+    public static final String url = "jdbc:mariadb://svc.sel5.cloudtype.app:30739/healthboard";
     public static final String user = "root";
     public static final String pwd = "1234";
 
