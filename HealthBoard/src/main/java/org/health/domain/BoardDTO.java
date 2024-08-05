@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class BoardDTO {
     private int board_id;
     private int user_id;
+    private String nickname;
     private String exercise_type;
     private int exercise_time;
     private String memo;
