@@ -112,7 +112,7 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
     `user_id` INT NOT NULL AUTO_INCREMENT,
-    `nickname` VARCHAR(255) NULL,
+    `nickname` VARCHAR(255) NULL UNIQUE,
     `age` INT NULL,
     `gender` VARCHAR(20) NULL,
     `last_login_date` DATETIME NULL,
