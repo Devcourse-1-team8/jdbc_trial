@@ -26,21 +26,12 @@ public class LikeRepositoryImpl implements LikeRepository {
         int result = 0;
 
         try {
-            con = DBUtil.getConnection();
             //이미 좋아요했는지 체크
-            String search = "select * from like_tb where user_id = ? AND board_id = ?";
-            pstmt = con.prepareStatement(search);
-            pstmt.setInt(1, like.getUser_id());
-            pstmt.setInt(2, like.getBoard_id());
-            rs = pstmt.executeQuery();
-            int rowCount = 0;
-            while (rs.next()) {
-                rowCount++;
-            }
-            if (rowCount > 0) {
+            if (this.checkExist(like)) {
                 System.out.println("이미 좋아요를 했습니다.");
                 return -1;
             }
+            con = DBUtil.getConnection();
 
             String sql = "insert into " +
                     "like_tb(user_id, board_id) " +
@@ -64,21 +55,12 @@ public class LikeRepositoryImpl implements LikeRepository {
         int result = 0;
 
         try {
-            con = DBUtil.getConnection();
             // 이미 좋아요가 있는지 체크
-            String search = "SELECT * FROM like_tb WHERE user_id = ? AND board_id = ?";
-            pstmt = con.prepareStatement(search);
-            pstmt.setInt(1, like.getUser_id());
-            pstmt.setInt(2, like.getBoard_id());
-            rs = pstmt.executeQuery();
-            int rowCount = 0;
-            while (rs.next()) {
-                rowCount++;
-            }
-            if (rowCount == 0) {
+            if (!this.checkExist(like)) {
                 System.out.println("좋아요를 하지 않았습니다.");
                 return -1;
             }
+            con = DBUtil.getConnection();
 
             // 기존 pstmt를 닫고 새로운 쿼리 준비
             rs.close();
@@ -97,5 +79,31 @@ public class LikeRepositoryImpl implements LikeRepository {
             DBUtil.close(rs, pstmt, con);
         }
         return result;
+    }
+
+    @Override
+    public boolean checkExist(LikeDTO like) {
+        int rowCount = 0;
+        boolean flag = false;
+
+        try {
+            con = DBUtil.getConnection();
+            //이미 좋아요했는지 체크
+            String sql = "select * from like_tb where user_id = ? AND board_id = ?";
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1, like.getUser_id());
+            pstmt.setInt(2, like.getBoard_id());
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                rowCount++;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+//        finally {
+//            DBUtil.close(rs, pstmt, con);
+//        }
+
+        return rowCount > 0 ? true : false;
     }
 }
