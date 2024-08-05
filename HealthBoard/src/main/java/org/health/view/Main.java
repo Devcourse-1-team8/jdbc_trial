@@ -57,7 +57,7 @@ public class Main {
                         addBoardRecord(br);
                         break;
                     case 9:
-                        deleteBoardRecord(br);
+//                        deleteBoardRecord(br);
                         break;
                     case 10:
                         toggleLike(br);
@@ -157,15 +157,17 @@ public class Main {
         boardRepository.addBoard(board);
     }
 
-    private static void deleteBoardRecord(BufferedReader reader) throws IOException {
-        System.out.print("운동 기록 ID를 입력하세요: ");
-        int boardId = Integer.parseInt(reader.readLine());
-        int userId = AuthManager.getInstance().getCurrentUser();
-        BoardLikeDTO board = boardRepository.findById(boardId , userId);
-        if (board != null) {
-            boardRepository.changeVisible(board);
-        }
-    }
+//    private static void deleteBoardRecord(BufferedReader reader) throws IOException {
+//        System.out.print("운동 기록 ID를 입력하세요: ");
+//        int boardId = Integer.parseInt(reader.readLine());
+//        int userId = AuthManager.getInstance().getCurrentUser();
+//        BoardLikeDTO board = boardRepository.findById(boardId , userId);
+//        BoardDTO board =
+//        if (board != null) {
+//
+//            boardRepository.changeVisible(board);
+//        }
+//    }
 
     private static void toggleLike(BufferedReader reader) throws IOException {
         System.out.print("운동 기록 ID를 입력하세요: ");

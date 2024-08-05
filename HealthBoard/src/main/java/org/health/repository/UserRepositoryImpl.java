@@ -86,26 +86,32 @@ public class UserRepositoryImpl implements UserRepository {
 
         try {
             con = DBUtil.getConnection();
-            String sql = "select * from user";
+            String sql = "SELECT * FROM user";
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 UserDTO user = new UserDTO();
+                user.setUser_id(rs.getInt("user_id"));
+                user.setNickname(rs.getString("nickname"));
+                user.setAge(rs.getInt("age"));
+                user.setGender(rs.getString("gender"));
 
-                user.setUser_id(user_id);
-                user.setNickname(nickname);
-                user.setAge(age);
-                user.setGender(gender);
-                user.setLast_login_date(last_login_date);
-                user.setLogin_count(login_count);
-                if (role.equals("user")) {
-                    myRole = Role.USER;
+                Timestamp lastLoginTimestamp = rs.getTimestamp("last_login_date");
+                if (lastLoginTimestamp != null) {
+                    user.setLast_login_date(lastLoginTimestamp.toLocalDateTime().toLocalDate());
                 }
-                else {
+
+                user.setLogin_count(rs.getInt("login_count"));
+
+                String role = rs.getString("role");
+                if (role.equalsIgnoreCase("USER")) {
+                    myRole = Role.USER;
+                } else {
                     myRole = Role.MANAGER;
                 }
                 user.setRole(myRole);
+
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -128,7 +134,10 @@ public class UserRepositoryImpl implements UserRepository {
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                lastLoginDate = rs.getTimestamp("last_login_date").toLocalDateTime();
+                Timestamp lastLoginTimestamp = rs.getTimestamp("last_login_date");
+                if (lastLoginTimestamp != null) {
+                    lastLoginDate = lastLoginTimestamp.toLocalDateTime();
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -155,6 +164,8 @@ public class UserRepositoryImpl implements UserRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }finally {
+            DBUtil.close(pstmt, con);
         }
 
         return result;
