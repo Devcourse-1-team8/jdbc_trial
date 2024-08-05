@@ -5,7 +5,6 @@ import org.health.domain.UserSignUpDTO;
 import org.health.domain.UserLoginInfoDTO;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface UserRepository {
     void logout();
   
     List<UserDTO> findAll() throws SQLException;
-    UserLoginInfoDTO findUserIdAndDate(int userId);
+    LocalDateTime findDate(int userId);
     int updateLoginDate(int userId, LocalDateTime date);
 
     boolean isConsecutive(int userId);

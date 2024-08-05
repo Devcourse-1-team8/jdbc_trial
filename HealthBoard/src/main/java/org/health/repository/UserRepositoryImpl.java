@@ -116,11 +116,11 @@ public class UserRepositoryImpl implements UserRepository {
         }
         return users;
     }
-  
+
     @Override
-    public UserLoginInfoDTO findUserIdAndDate(int userId) {
-        UserLoginInfoDTO userLoginInfoDTO = null;
-        String SQL = "select user_id, last_login_date from user where user_id = ?";
+    public LocalDateTime findDate(int userId) {
+        LocalDateTime lastLoginDate = null;
+        String SQL = "SELECT last_login_date FROM user WHERE user_id = ?";
         try {
             con = DBUtil.getConnection();
             pstmt = con.prepareStatement(SQL);
@@ -129,17 +129,16 @@ public class UserRepositoryImpl implements UserRepository {
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                userLoginInfoDTO = new UserLoginInfoDTO();
-                userLoginInfoDTO.setUserId(rs.getInt("user_id"));
-                userLoginInfoDTO.setLoginTime(rs.getTimestamp("last_login_date").toLocalDateTime());
+                lastLoginDate = rs.getTimestamp("last_login_date").toLocalDateTime();
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            DBUtil.close(rs, pstmt, con);
         }
-
-        return userLoginInfoDTO;
+        return lastLoginDate;
     }
+
 
     @Override
     public int updateLoginDate(int userId, LocalDateTime date) {
@@ -165,10 +164,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean isConsecutive(int userId) {
-        UserLoginInfoDTO userLoginInfo = findUserIdAndDate(userId);
-        if (userLoginInfo != null && userLoginInfo.getLoginTime() != null) {
+        LocalDateTime lastLoginDateTime = findDate(userId);
+        if (lastLoginDateTime != null) {
             LocalDateTime now = LocalDateTime.now();
-            LocalDateTime lastLoginDateTime = userLoginInfo.getLoginTime();
             long diff = ChronoUnit.DAYS.between(lastLoginDateTime.toLocalDate(), now.toLocalDate());
             return diff == 1;
         }
@@ -177,10 +175,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean isConsecutiveForTest(int userId) {
-        UserLoginInfoDTO userLoginInfo = findUserIdAndDate(userId);
-        if (userLoginInfo != null && userLoginInfo.getLoginTime() != null) {
+        LocalDateTime lastLoginDateTime = findDate(userId);
+        if (lastLoginDateTime != null) {
             LocalDateTime now = LocalDateTime.now();
-            LocalDateTime lastLoginDateTime = userLoginInfo.getLoginTime();
             long diff = ChronoUnit.MINUTES.between(lastLoginDateTime, now);
             return diff <= 5;
         }
