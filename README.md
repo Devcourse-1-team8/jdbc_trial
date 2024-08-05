@@ -97,8 +97,7 @@
 
 [데브코스 1차 8팀 헬스보드](https://www.erdcloud.com/d/TamjfW9JDAN3Xanmn)
 
-![title](![Untitled](https://github.com/user-attachments/assets/386fc9f0-2daf-4575-82cf-e752c9027c4c))
-
+![ERD](./ERD.png)
 
 
 ## SQL
