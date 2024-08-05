@@ -77,13 +77,9 @@ public class BoardRepositoryImpl implements BoardRepository {
 
             while(rs.next()){
                 boardDTO.setBoard_id(rs.getInt("b.board_id"));
-                boardDTO.setUser_id(rs.getInt("b.user_id"));
                 boardDTO.setNickname(rs.getString("u.nickname"));
                 boardDTO.setExercise_type(rs.getString("b.exercise_type"));
-                boardDTO.setExercise_time(rs.getInt("b.exercise_time"));
-                boardDTO.setMemo(rs.getString("b.memo"));
                 boardDTO.setCreate_at(rs.getDate("b.create_at").toLocalDate());
-                boardDTO.setVisible(rs.getBoolean("b.visible"));
                 boardList.add(boardDTO);
             }
         } catch (SQLException e){
@@ -96,7 +92,6 @@ public class BoardRepositoryImpl implements BoardRepository {
 
     @Override
     public List<BoardDTO> findAll() {
-        BoardDTO boardDTO = new BoardDTO();
         List<BoardDTO> list = new ArrayList<>();
 
         try {
@@ -107,6 +102,7 @@ public class BoardRepositoryImpl implements BoardRepository {
             rs = pstmt.executeQuery();
 
             while(rs.next()){
+                BoardDTO boardDTO = new BoardDTO();
                 boardDTO.setBoard_id(rs.getInt("b.board_id")); //int
                 boardDTO.setUser_id(rs.getInt("b.user_id"));  //int
                 boardDTO.setNickname(rs.getString("u.nickname"));
