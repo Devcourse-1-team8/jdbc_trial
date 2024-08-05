@@ -4,6 +4,7 @@ import org.health.domain.Role;
 import org.health.domain.UserDTO;
 import org.health.domain.UserSignUpDTO;
 import org.health.domain.UserLoginInfoDTO;
+import org.health.infra.AuthManager;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -16,12 +17,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     private static UserRepositoryImpl instance = new UserRepositoryImpl();
 
+    private final AuthManager authManager;
     private Connection con;
     private ResultSet rs;
     private PreparedStatement pstmt;
 
-
-    private UserRepositoryImpl() {}
+    private UserRepositoryImpl() {
+        this.authManager = AuthManager.getInstance();
+    }
 
     public static UserRepositoryImpl getInstance() {
         return instance;
@@ -48,11 +51,33 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public int login(String user) {
-        return 0;
+        try {
+            con = DBUtil.getConnection();
+            String sql = "SELECT user_id FROM user WHERE nickname = ?";
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, user);
+
+            rs = pstmt.executeQuery();
+            boolean isUserExists = rs.next();
+            if (!isUserExists) {
+                throw new RuntimeException("User Not Found");
+            }
+
+            int userId = rs.getInt("user_id");
+            authManager.login(userId);
+
+            return userId;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBUtil.close(rs, pstmt, con);
+        }
     }
 
     @Override
-    public void logout() {}
+    public void logout() {
+        authManager.logout();
+    }
 
     @Override
     public List<UserDTO> findAll() throws SQLException {
