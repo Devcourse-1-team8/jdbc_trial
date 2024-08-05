@@ -2,6 +2,7 @@ package org.health.repository;
 
 import org.health.domain.Role;
 import org.health.domain.UserDTO;
+import org.health.domain.UserSignUpDTO;
 import org.health.domain.UserLoginInfoDTO;
 
 import java.sql.*;
@@ -27,8 +28,22 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public int addUser(UserDTO user) {
-        return 0;
+    public int addUser(UserSignUpDTO user) {
+        try {
+            con = DBUtil.getConnection();
+            String sql = "INSERT INTO user (nickname, age, gender, role) VALUES (?, ?, ?, ?)";
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, user.getNickname());
+            pstmt.setInt(2, user.getAge());
+            pstmt.setString(3, user.getGender());
+            pstmt.setString(4, String.valueOf(Role.USER));
+
+            return pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBUtil.close(pstmt, con);
+        }
     }
 
     @Override
@@ -66,10 +81,10 @@ public class UserRepositoryImpl implements UserRepository {
             user.setLast_login_date(last_login_date);
             user.setLogin_count(login_count);
             if (role.equals("user")) {
-                myRole = Role.user;
+                myRole = Role.USER;
             }
             else {
-                myRole = Role.manager;
+                myRole = Role.MANAGER;
             }
             user.setRole(myRole);
             users.add(user);
