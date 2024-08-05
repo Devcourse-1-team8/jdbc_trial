@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface BoardRepository {
 
-    int addBoard(BoardDTO board);
+    int addBoard(BoardDTO board, int user_id);
     int changeVisible(BoardDTO board);
     List<BoardDTO> findByUser_id(int user_id);
     List<BoardDTO> findAll();
