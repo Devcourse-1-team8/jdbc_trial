@@ -7,10 +7,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
-public class UserRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl implements UserRepository {
+    private static UserRepositoryImpl instance = new UserRepositoryImpl();
+
     private Connection con;
     private ResultSet rs;
     private PreparedStatement pstmt;
+
+    private UserRepositoryImpl() {}
+
+    public static UserRepositoryImpl getInstance() {
+        return instance;
+    }
+
     @Override
     public int addUser(UserDTO user) {
         return 0;

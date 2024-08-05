@@ -7,10 +7,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
-public class BoardRepositoryImpl implements BoardRepository{
+public class BoardRepositoryImpl implements BoardRepository {
+    private static BoardRepositoryImpl instance = new BoardRepositoryImpl();
+
     private Connection con;
     private ResultSet rs;
     private PreparedStatement pstmt;
+
+    private BoardRepositoryImpl() {}
+
+    public static BoardRepositoryImpl getInstance() {
+        return instance;
+    }
+
     @Override
     public int addBoard(BoardDTO board) {
         return 0;
