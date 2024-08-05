@@ -63,38 +63,35 @@ public class BoardRepositoryImpl implements BoardRepository {
     }
 
     @Override
-    public BoardLikeDTO findById(int board_id, int user_id) {
+    public List<BoardDTO> findByUser_id(int user_id) {
+        BoardDTO boardDTO = new BoardDTO();
+        List<BoardDTO> boardList = new ArrayList<>();
+        String sql ="select b.board_id, u.nickname, b.exercise_type, b.create_at " +
+                "from board b natural join user u " +
+                "where b.visible = true and b.user_id = " + user_id;
+
         try {
             con = DBUtil.getConnection();
-            pstmt = con.prepareStatement("select board_id, user.user_id, nickname, exercise_type, exercise_time, memo, create_at, visible " +
-                    "from board " +
-                    "join user on board.user_id = user.user_id " +
-                    "where board_id = ?");
-            pstmt.setInt(1, board_id);
-            ResultSet boardInfoResultSet = pstmt.executeQuery();
+            pstmt = con.prepareStatement(sql);
+            rs = pstmt.executeQuery();
 
-            pstmt = con.prepareStatement("select count(*) as like_count " +
-                    "from like_tb " +
-                    "where board_id = ?");
-            pstmt.setInt(1, board_id);
-            ResultSet likeCountResultSet = pstmt.executeQuery();
-
-            pstmt = con.prepareStatement("select if( " +
-                    "(select count(*) from like_tb where user_id = ? and board_id = ?) = 0, " +
-                    "false, " +
-                    "true " +
-                    ") as like_status");
-            pstmt.setInt(1, user_id);
-            pstmt.setInt(2, board_id);
-            ResultSet likeStatusResultSet = pstmt.executeQuery();
-
-            return toBoardLikeDTO(boardInfoResultSet, likeCountResultSet, likeStatusResultSet);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            while(rs.next()){
+                boardDTO.setBoard_id(rs.getInt("b.board_id"));
+                boardDTO.setUser_id(rs.getInt("b.user_id"));
+                boardDTO.setNickname(rs.getString("u.nickname"));
+                boardDTO.setExercise_type(rs.getString("b.exercise_type"));
+                boardDTO.setExercise_time(rs.getInt("b.exercise_time"));
+                boardDTO.setMemo(rs.getString("b.memo"));
+                boardDTO.setCreate_at(rs.getDate("b.create_at").toLocalDate());
+                boardDTO.setVisible(rs.getBoolean("b.visible"));
+                boardList.add(boardDTO);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
         } finally {
             DBUtil.close(rs, pstmt, con);
         }
-
+        return boardList;
     }
 
     @Override
